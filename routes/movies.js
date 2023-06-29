@@ -1,0 +1,66 @@
+const { Movie } = require('../models/movie');
+const { Genre } = require('../models/genre');
+const validateObjectId = require('../middleware/validateObject');
+const express = require('express');
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+  const movies = await Movie.find().sort('name');
+  res.status(200).send(movies);
+});
+
+router.get('/:id', validateObjectId, async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  if (!movie) return res.status(404).send('Movie Not Found.');
+  res.status(200).send(movie);
+});
+
+router.post('/', async (req, res) => {
+  const genre = await Genre.findById(req.body.genreId);
+  if (!genre) return res.status(404).send('Genre Not Found.');
+
+  const movie = new Movie({
+    title: req.body.title,
+    genre: {
+      _id: genre._id,
+      name: genre.name,
+    },
+    numberInStock: req.body.numberInStock,
+    dailyRentalRate: req.body.dailyRentalRate,
+  });
+
+  await movie.save();
+  res.status(200).send(movie);
+});
+
+router.put('/:id', validateObjectId, async (req, res) => {
+  const genre = await Genre.findById(req.body.genreId);
+  if (!genre) return res.status(404).send('Genre Not Found.');
+
+  const movie = await Movie.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        title: req.body.title,
+        genre: {
+          _id: genre._id,
+          name: genre.name,
+        },
+        numberInStock: req.body.numberInStock,
+        dailyRentalRate: req.body.dailyRentalRate,
+      },
+    },
+    { new: true }
+  );
+  if (!movie) return res.status(404).send('Movie Not Found.');
+  res.status(200).send(movie);
+});
+
+router.delete('/:id', validateObjectId, async (req, res) => {
+  const movie = await Movie.findByIdAndDelete(req.params.id);
+  if (!movie) return res.status(404).send('Movie Not Found.');
+
+  res.status(200).send(movie);
+});
+
+module.exports = router;

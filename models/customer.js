@@ -13,8 +13,9 @@ const CustomerSchema = new mongoose.Schema({
     default: false,
   },
   phone: {
-    type: Number,
-    min: 8,
+    type: String,
+    min: 5,
+    max: 50,
     required: true,
   },
 });
