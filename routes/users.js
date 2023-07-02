@@ -1,6 +1,7 @@
 const { User } = require('../models/user');
 const auth = require('../middleware/auth');
 const validateObjectId = require('../middleware/validateObject');
+const admin = require('../middleware/admin');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const express = require('express');
@@ -35,7 +36,7 @@ router.post('/', async (req, res) => {
     .send(_.pick(user, ['_id', 'name', 'email']));
 });
 
-router.put('/:id', validateObjectId, async (req, res) => {
+router.put('/:id', [validateObjectId, auth], async (req, res) => {
   let user = await User.findById(req.params.id);
   if (!user) return res.status(404).send('User Not Found.');
 
@@ -49,7 +50,7 @@ router.put('/:id', validateObjectId, async (req, res) => {
   res.status(200).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
-router.delete('/:id', validateObjectId, async (req, res) => {
+router.delete('/:id', [validateObjectId, auth, admin], async (req, res) => {
   const user = await User.findByIdAndDelete(req.params.id);
   res.status(200).send(_.pick(user, ['_id', 'name', 'email']));
 });
