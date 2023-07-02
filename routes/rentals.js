@@ -18,7 +18,9 @@ router.get('/:id', validateObjectId, async (req, res) => {
 
 router.post('/', async (req, res) => {
   const customer = await Customer.findById(req.body.customerId);
+  if (!customer) return res.status(404).send('Rental Not Found.');
   const movie = await Movie.findById(req.body.movieId);
+  if (!movie) return res.status(404).send('Rental Not Found.');
 
   if (movie.numberInStock === 0)
     return res.status(400).send(`Movie- ${movie.title} is not in stock.`);
