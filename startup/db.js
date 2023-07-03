@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
+const winston = requir('winston');
 
 module.exports = function () {
-  mongoose
-    .connect(process.env.URI)
-    .then(() => {
-      console.log('Connected to MongoBD');
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+  mongoose.connect(process.env.URI).then(() => {
+    winston.info('Connected to MongoBD....');
+  });
 };
