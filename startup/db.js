@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const winston = requir('winston');
+const winston = require('winston');
 
 module.exports = function () {
   mongoose.connect(process.env.URI).then(() => {

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const RentalSchema = new mongoose.Schema({
   customer: {
@@ -8,6 +9,7 @@ const RentalSchema = new mongoose.Schema({
         type: String,
         minlength: 4,
         maxlength: 24,
+        trim: true,
         required: true,
       },
       isGold: {
@@ -55,4 +57,14 @@ const RentalSchema = new mongoose.Schema({
 
 const Rental = mongoose.model('rentals', RentalSchema);
 
+function validateRental(rental) {
+  const { customerId, movieId } = rental;
+  const schema = Joi.object({
+    customerId: Joi.string().min(24).max(24).required(),
+    movieId: Joi.string().min(24).max(24).required(),
+  });
+  return schema.validate({ customerId, movieId });
+}
+
+exports.validate = validateRental;
 exports.Rental = Rental;

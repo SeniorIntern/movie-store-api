@@ -1,4 +1,4 @@
-const { Movie } = require('../models/movie');
+const { Movie, validate } = require('../models/movie');
 const { Genre } = require('../models/genre');
 const validateObjectId = require('../middleware/validateObject');
 const auth = require('../middleware/auth');
@@ -18,6 +18,9 @@ router.get('/:id', validateObjectId, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   const genre = await Genre.findById(req.body.genreId);
   if (!genre) return res.status(404).send('Genre Not Found.');
 
@@ -36,6 +39,9 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.put('/:id', auth, validateObjectId, async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   const genre = await Genre.findById(req.body.genreId);
   if (!genre) return res.status(404).send('Genre Not Found.');
 

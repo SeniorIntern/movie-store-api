@@ -1,4 +1,4 @@
-const { Customer } = require('../models/customer');
+const { Customer, validate } = require('../models/customer');
 const validateObjectId = require('../middleware/validateObject');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
@@ -17,6 +17,9 @@ router.get('/:id', validateObjectId, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   const customer = new Customer({
     name: req.body.name,
     isGold: req.body.isGold,
@@ -27,6 +30,9 @@ router.post('/', auth, async (req, res) => {
 });
 
 router.put('/:id', auth, validateObjectId, async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   const customer = await Customer.findByIdAndUpdate(
     req.params.id,
     {
