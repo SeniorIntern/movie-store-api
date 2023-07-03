@@ -1,15 +1,14 @@
 require('dotenv').config();
-
+const winston = require('winston');
 const express = require('express');
 const app = express();
 
 require('./startup/logging')();
+require('./startup/config')();
 require('./startup/db')();
 require('./startup/routes')(app);
 
-if (!process.env.KEY) process.exit('Fatal Error. JWT key is not defined');
-
 const port = process.env.PORT;
 app.listen(port, () => {
-  console.log(`listening on port: ${port}`);
+  winston.info(`listening on port: ${port}`);
 });
