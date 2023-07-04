@@ -9,7 +9,7 @@ const error = require('../middleware/error');
 
 module.exports = function (app) {
   app.use(express.json());
-  app.use(express.urlencoded());
+  app.use(express.urlencoded({ extended: true }));
   app.use('/api/users', user);
   app.use('/api/auth', auth);
   app.use('/api/customers', customer);
