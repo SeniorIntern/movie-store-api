@@ -7,6 +7,7 @@ require('./startup/logging')();
 require('./startup/config')();
 require('./startup/db')();
 require('./startup/routes')(app);
+require('./startup/prod')(app);
 
 const port = process.env.PORT;
 app.listen(port, () => {
