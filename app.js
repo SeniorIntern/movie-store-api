@@ -9,6 +9,6 @@ require('./startup/db')();
 require('./startup/routes')(app);
 
 const port = process.env.PORT;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   winston.info(`listening on port: ${port}`);
 });
