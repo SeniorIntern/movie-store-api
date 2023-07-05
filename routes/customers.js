@@ -29,7 +29,7 @@ router.post('/', auth, async (req, res) => {
   res.status(200).send(customer);
 });
 
-router.put('/:id', auth, validateObjectId, async (req, res) => {
+router.put('/:id', [auth, validateObjectId], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -47,7 +47,7 @@ router.put('/:id', auth, validateObjectId, async (req, res) => {
   res.status(200).send(customer);
 });
 
-router.delete('/:id', [auth, admin], validateObjectId, async (req, res) => {
+router.delete('/:id', [auth, admin, validateObjectId], async (req, res) => {
   const customer = await Customer.findByIdAndDelete(req.params.id);
   if (!customer) res.status(200).send('Customer Not Found.');
   res.status(200).send(customer);
