@@ -27,5 +27,6 @@ function rateLimiter({ secondsWindow, allowedHits }) {
     }
   };
 }
+
 module.exports = rateLimiter;
 

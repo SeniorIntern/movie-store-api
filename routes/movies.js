@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get('/', rateLimiter({ secondsWindow: 60, allowedHits: 2 }), async (req, res) => {
   const movies = await Movie.find().sort('name');
+
   res.status(200).send({
     redisInfo: {
       response: 'ok',
