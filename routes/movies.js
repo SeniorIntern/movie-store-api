@@ -4,11 +4,19 @@ const validateObjectId = require('../middleware/validateObject');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const express = require('express');
+const rateLimiter = require('../middleware/rate-limiter');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', rateLimiter({ secondsWindow: 60, allowedHits: 2 }), async (req, res) => {
   const movies = await Movie.find().sort('name');
-  res.status(200).send(movies);
+  res.status(200).send({
+    redisInfo: {
+      response: 'ok',
+      callsInMinute: req.requests,
+      ttl: req.ttl,
+    },
+    movies
+  });
 });
 
 router.get('/:id', validateObjectId, async (req, res) => {
